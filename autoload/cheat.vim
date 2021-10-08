@@ -296,18 +296,16 @@ function! cheat#createOrSwitchToBuffer()
         execute ':'.g:CheatSheetReaderCmd.
                 \ ' +set\ bt=nofile\ bufhidden=wipe '.
                 \g:CheatSheetBufferName
-        if(!exists("g:CheatSheetDoNotMap") || g:CheatSheetDoNotMap ==0)
-            nnoremap <buffer> <silent> <localleader>h :call cheat#navigate(-1,'A')<CR>
-            nnoremap <buffer> <silent> <localleader>j :call cheat#navigate(1,'Q')<CR>
-            nnoremap <buffer> <silent> <localleader>k :call cheat#navigate(-1,'Q')<CR>
-            nnoremap <buffer> <silent> <localleader>l :call cheat#navigate(1,'A')<CR>
+        nnoremap <buffer> <silent> <localleader>h :call cheat#navigate(-1,'A')<CR>
+        nnoremap <buffer> <silent> <localleader>j :call cheat#navigate(1,'Q')<CR>
+        nnoremap <buffer> <silent> <localleader>k :call cheat#navigate(-1,'Q')<CR>
+        nnoremap <buffer> <silent> <localleader>l :call cheat#navigate(1,'A')<CR>
 
-            nnoremap <buffer> <silent> <localleader>H :call cheat#navigate(-1,'H')<CR>
-            nnoremap <buffer> <silent> <localleader>J :call cheat#navigate(1,'S')<CR>
-            nnoremap <buffer> <silent> <localleader>K :call cheat#navigate(-1,'S')<CR>
-            nnoremap <buffer> <silent> <localleader>L :call cheat#navigate(1,'H')<CR>
+        nnoremap <buffer> <silent> <localleader>H :call cheat#navigate(-1,'H')<CR>
+        nnoremap <buffer> <silent> <localleader>J :call cheat#navigate(1,'S')<CR>
+        nnoremap <buffer> <silent> <localleader>K :call cheat#navigate(-1,'S')<CR>
+        nnoremap <buffer> <silent> <localleader>L :call cheat#navigate(1,'H')<CR>
 
-        endif
     endif
 endfunction
 
@@ -389,6 +387,9 @@ endfunction
 
 " Read answer line by line
 function! cheat#handleRequestOutput(channel, msg, ...)
+    let raw_query=s:lastRequest().ft . s:lastRequest().query
+    let query = system('~/bin/convert_raw_query.sh ' . raw_query)
+    call add(s:lines, query)
     if has('nvim')
         call extend(s:lines, a:msg[1:])
     else
